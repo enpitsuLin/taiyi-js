@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Taiyi.js</title>
+</head>
+<body>
+
+<script src="../dist/taiyi.min.js"></script>
+<script>
+taiyi.api.getConfig(function(err, response){
+  console.log(err, response);
+});
+taiyi.api.getAccounts(['sifu', 'hongzhong'], function(err, response){
+  console.log(err, response);
+});
+taiyi.api.getAccountCount(function(err, response){
+  console.log(err, response);
+});
+</script>
+
+</body>
+</html>

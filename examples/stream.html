@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Taiyi.js Stream</title>
+</head>
+<body>
+
+<script src="../dist/taiyi.min.js"></script>
+<script>
+  taiyi.api.setOptions({ 
+    url: 'ws://127.0.0.1:8090',
+    chain_id: "18dcf0a285365fc58b71f18b3d3fec954aa0c141c44e4e5cb4cf777b9eab274e"
+  });
+  
+  taiyi.api.streamOperations(function (err, operations) {
+    operations.forEach(function (operation) {
+      console.log(operation);
+    });
+  });
+</script>
+
+</body>
+</html>
