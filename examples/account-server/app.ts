@@ -15,11 +15,13 @@ app.use(bodyParser.urlencoded({ extended: false }) as RequestHandler);
 // app.use(bodyParser.urlencoded({extended: false}));
 // app.use(bodyParser.json());
 
+function die(msg) { process.stderr.write(msg+'\n'); process.exit(1) }
+
 const creator_name = process.env.CREATOR_NAME?process.env.CREATOR_NAME:"";
 const creator_key = process.env.CREATOR_WIF?process.env.CREATOR_WIF:"";
 
 if(creator_name == "" || creator_key == "")
-    console.error("Can not create account without CREATOR_NAME or CREATOR_WIF set");
+    die("Can not create account without CREATOR_NAME or CREATOR_WIF set");
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post('/create', async (req, res) => {
@@ -35,8 +37,7 @@ app.post('/create', async (req, res) => {
         return;
 	}
 
-    var logTime = new Date();
-    console.log(`[${logTime.toLocaleTimeString()}] new account for ${name})`);
+    console.log(`[${(new Date()).toLocaleTimeString()}] new account for ${name}`);
 
     try {
         const keys = taiyi.auth.generateKeys(name, pass, ['posting', 'active', 'owner', 'memo']);
@@ -67,18 +68,58 @@ app.post('/create', async (req, res) => {
 
         // check
         const [newAcc] = await taiyi.api.getAccountsAsync([name])
-		logTime = new Date();
-		console.log(`[${logTime.toLocaleTimeString()}] Account ${name}(id=${newAcc.id}) has been created.`);
+		console.log(`[${(new Date()).toLocaleTimeString()}] Account ${name}(id=${newAcc.id}) has been created.`);
 
-		res.send({
+        // 赠送一点真气
+        await taiyi.broadcast.transferToQiAsync(
+            creator_key,
+            creator_name,
+            name,
+            "1.000 YANG"          
+        )
+
+        console.log(`[${(new Date()).toLocaleTimeString()}] transfer some qi to ${name}.`);
+
+        // 赠送一个“衍童石”
+        const tx = await taiyi.broadcast.createNfaAsync(
+            creator_key,
+            creator_name,
+            "nfa.fabao.yantongshi"
+        )
+
+        const tx_result = await taiyi.api.getTransactionResultsAsync(tx.id);
+        let new_nfa = null;
+        tx_result.forEach( (result) => {
+            // console.log(JSON.stringify(result));
+            if(result.type == "contract_result") {
+                let cresult = result.value;
+                new_nfa = cresult.contract_affecteds[0].value.affected_item;
+            }
+        });
+
+        console.log(`[${(new Date()).toLocaleTimeString()}] create new nfa to ${creator_name}.`);
+
+        await taiyi.broadcast.transferNfaAsync(
+            creator_key,
+            creator_name,
+            name,
+            new_nfa
+        )
+
+        console.log(`[${(new Date()).toLocaleTimeString()}] transfer new nfa to ${name}.`);
+
+        res.send({
             "status" : true,
-			"name" : name
+			"name" : name,
+            "new_nfa" : new_nfa
 		});
         return;
 	} catch(err) {
         var logTime = new Date();
         console.log(`[${logTime.toLocaleTimeString()}] create ${name} error!`);
         console.log(err.toString());
+        if(err.payload)
+            console.log(err.payload)
         res.send({status:false, err:err.toString()});
         return;
     };

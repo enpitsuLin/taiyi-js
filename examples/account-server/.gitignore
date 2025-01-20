@@ -1,0 +1,14 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+node_modules
+
+# node-dist
+.envrc
+.idea
+.save
+lib
+dist
+yarn.lock

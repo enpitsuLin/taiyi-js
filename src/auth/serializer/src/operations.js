@@ -268,6 +268,63 @@ let claim_reward_balance = new Serializer(
 }
 );
 
+let create_contract = new Serializer(
+    "create_contract", 
+    {
+    }
+);
+
+let revise_contract = new Serializer(
+    "revise_contract", 
+    {
+    }
+);
+
+let call_contract_function = new Serializer(
+    "call_contract_function", 
+    {
+    }
+);
+
+let create_nfa_symbol = new Serializer(
+    "create_nfa_symbol", 
+    {
+    }
+);
+
+let create_nfa = new Serializer(
+    "create_nfa", 
+    {
+        creator: string,
+        symbol: string
+    }
+);
+
+let transfer_nfa = new Serializer(
+    "transfer_nfa", 
+    {
+        from: string,
+        to: string,
+        id: int64
+    }
+);
+
+let approve_nfa_active = new Serializer(
+    "approve_nfa_active", 
+    {
+    }
+);
+
+let action_nfa = new Serializer(
+    "action_nfa", {
+    caller: string,
+    id: int64,
+    action: string,
+    value_list: array(string),
+    extensions: array(string)
+}
+);
+
 let delegate_qi = new Serializer(
     "delegate_qi", {
     delegator: string,
@@ -284,6 +341,28 @@ let siming_set_properties = new Serializer(
 }
 );
 
+let create_zone = new Serializer(
+    "create_zone",
+    {        
+    }
+);
+  
+let create_actor_talent_rule = new Serializer(
+    "create_actor_talent_rule",
+    {        
+    }
+);
+
+let create_actor = new Serializer(
+    "create_actor",
+    {        
+        fee: asset,
+        creator: string,
+        family_name: string,
+        last_name: string
+    }
+);
+
 let hardfork = new Serializer(
     "hardfork",
     {hardfork_id: uint32}
@@ -294,6 +373,81 @@ let return_qi = new Serializer(
     account: string,
     vesting_shares: asset
 }
+);
+
+let fill_qi_withdraw = new Serializer(
+    "fill_qi_withdraw",
+    {}
+);
+
+let return_qi_delegation = new Serializer(
+    "return_qi_delegation",
+    {}
+);
+
+let producer_reward = new Serializer(
+    "producer_reward",
+    {}
+);
+
+let nfa_convert_qi_to_resources = new Serializer(
+    "nfa_convert_qi_to_resources",
+    {}
+);
+
+let nfa_trasfer = new Serializer(
+    "nfa_trasfer",
+    {}
+);
+
+let nfa_deposit_withdraw = new Serializer(
+    "nfa_deposit_withdraw",
+    {}
+);
+
+let reward_feigang = new Serializer(
+    "reward_feigang",
+    {}
+);
+
+let reward_cultivation = new Serializer(
+    "reward_cultivation",
+    {}
+);
+
+let tiandao_year_change = new Serializer(
+    "tiandao_year_change",
+    {}
+);
+
+let tiandao_month_change = new Serializer(
+    "tiandao_month_change",
+    {}
+);
+
+let tiandao_time_change = new Serializer(
+    "tiandao_time_change",
+    {}
+);
+
+let actor_born = new Serializer(
+    "actor_born",
+    {}
+);
+
+let actor_talent_trigger = new Serializer(
+    "actor_talent_trigger",
+    {}
+);
+
+let actor_movement = new Serializer(
+    "actor_movement",
+    {}
+);
+
+let actor_grown_operation = new Serializer(
+    "actor_grown_operation",
+    {}
 );
 
 operation.st_operations = [
@@ -322,44 +476,44 @@ operation.st_operations = [
     claim_reward_balance,
   
     // contract
-    // create_contract,
-    // revise_contract,
-    // call_contract_function,
+    create_contract,
+    revise_contract,
+    call_contract_function,
   
     // nfa (non fungible asset)
-    // create_nfa_symbol,
-    // create_nfa,
-    // transfer_nfa,
-    // approve_nfa_active,
-    // action_nfa,
+    create_nfa_symbol,
+    create_nfa,
+    transfer_nfa,
+    approve_nfa_active,
+    action_nfa,
   
     // zone
-    // create_zone,
+    create_zone,
   
     // actor
-    // create_actor_talent_rule,
-    // create_actor,
+    create_actor_talent_rule,
+    create_actor,
   
     //**** virtual operations below this point
-    hardfork
-    // fill_qi_withdraw,
-    // return_qi_delegation,
-    // producer_reward,
+    hardfork,
+    fill_qi_withdraw,
+    return_qi_delegation,
+    producer_reward,
   
-    // nfa_convert_qi_to_resources,
-    // nfa_trasfer,
-    // nfa_deposit_withdraw,
-    // reward_feigang,
-    // reward_cultivation,
+    nfa_convert_qi_to_resources,
+    nfa_trasfer,
+    nfa_deposit_withdraw,
+    reward_feigang,
+    reward_cultivation,
   
-    // tiandao_year_change,
-    // tiandao_month_change,
-    // tiandao_time_change,
+    tiandao_year_change,
+    tiandao_month_change,
+    tiandao_time_change,
   
-    // actor_born,
-    // actor_talent_trigger,
-    // actor_movement,
-    // actor_grown_operation
+    actor_born,
+    actor_talent_trigger,
+    actor_movement,
+    actor_grown_operation
   ];
 
 let transaction = new Serializer(

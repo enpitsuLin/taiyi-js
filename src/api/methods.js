@@ -1,5 +1,20 @@
 export default [
     {
+        "api": "baiyujing_api",
+        "method": "find_actor",
+        "params": ["name"]
+    },
+    {
+        "api": "baiyujing_api",
+        "method": "eval_nfa_action_with_string_args",
+        "params": ["nfa", "action", "args"]  
+    },
+    {
+      "api": "baiyujing_api",
+      "method": "get_nfa_action_info",
+      "params": ["nfa", "action"]  
+    },
+    {
       "api": "database_api",
       "method": "set_subscribe_callback",
       "params": ["callback", "clearFilter"]
@@ -39,7 +54,7 @@ export default [
       "params": ["path"]
     },
     {
-      "api": "database_api",
+      "api": "baiyujing_api",
       "method": "get_config"
     },
     {
@@ -120,6 +135,11 @@ export default [
       "api": "database_api",
       "method": "get_transaction",
       "params": ["trxId"]
+    },
+    {
+      "api": "baiyujing_api",
+      "method": "get_transaction_results",
+      "params": ["trxId"]  
     },
     {
       "api": "database_api",
@@ -217,5 +237,10 @@ export default [
       "api": "network_broadcast_api",
       "method": "set_max_block_age",
       "params": ["maxBlockAge"]
+    },
+    {
+      "api": "baiyujing_api",
+      "method": "find_nfa",
+      "params": ["nfaId"]  
     },
 ];

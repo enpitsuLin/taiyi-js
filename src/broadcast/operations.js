@@ -10,7 +10,7 @@ module.exports = [
     ]
   },
   {
-    "roles": ["active", "owner"],
+    "roles": ["active"],
     "operation": "transfer_to_qi",
     "params": [
       "from",
@@ -197,6 +197,44 @@ module.exports = [
     "params": [
       "owner",
       "props",
+      "extensions"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "create_actor",
+    "params": [
+      "fee",
+      "creator",
+      "family_name",
+      "last_name"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "create_nfa",
+    "params": [
+      "creator",
+      "symbol"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "transfer_nfa",
+    "params": [
+      "from",
+      "to",
+      "id"
+    ]
+  },
+  {
+    "roles": ["active"],
+    "operation": "action_nfa",
+    "params": [
+      "caller",
+      "id",
+      "action",
+      "value_list",
       "extensions"
     ]
   }
