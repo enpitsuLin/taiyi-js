@@ -74,7 +74,8 @@ export default class WsTransport extends Transport {
           reject(val);
           callback(val);
         }
-      });
+      })
+      .catch(error => { /* 忽略默认的异常处理，避免始终打印 Unhandled rejection Error 调用堆栈 */});
 
       if (this.options.useAppbaseApi) {
         api = 'baiyujing_api';

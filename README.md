@@ -1,4 +1,4 @@
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hongzhongx/taiyi-js/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hongzhongx/taiyi-js/blob/master/LICENSE) [![Build Status](https://img.shields.io/circleci/project/github/hongzhongx/taiyi-js.svg?style=flat-square)](https://circleci.com/gh/hongzhongx/workflows/taiyi-js) [![Package Version](https://img.shields.io/npm/v/@taiyinet/taiyi-js.svg?style=flat-square)](https://www.npmjs.com/package/@taiyinet/taiyi-js)
 
 # Taiyi.js
 Taiyi.js the JavaScript API for Taiyi network

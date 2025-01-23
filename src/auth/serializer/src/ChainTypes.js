@@ -58,7 +58,7 @@ ChainTypes.operations= {
   return_qi_delegation:  31,
   producer_reward:       32,
 
-  nfa_convert_qi_to_resources:  33,
+  nfa_convert_resources: 33,
   nfa_trasfer:           34,
   nfa_deposit_withdraw:  35,
   reward_feigang:        36,
@@ -71,7 +71,8 @@ ChainTypes.operations= {
   actor_born:            41,
   actor_talent_trigger:  42,
   actor_movement:        43,
-  actor_grown_operation:   44
+  actor_grown_operation: 44,
+  narrate_log_operation: 45
 };
 
 //types.hpp

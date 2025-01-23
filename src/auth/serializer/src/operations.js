@@ -390,8 +390,8 @@ let producer_reward = new Serializer(
     {}
 );
 
-let nfa_convert_qi_to_resources = new Serializer(
-    "nfa_convert_qi_to_resources",
+let nfa_convert_resources = new Serializer(
+    "nfa_convert_resources",
     {}
 );
 
@@ -450,6 +450,11 @@ let actor_grown_operation = new Serializer(
     {}
 );
 
+let narrate_log_operation = new Serializer(
+    "narrate_log_operation",
+    {}
+);
+
 operation.st_operations = [
     account_create,
     account_update,
@@ -500,7 +505,7 @@ operation.st_operations = [
     return_qi_delegation,
     producer_reward,
   
-    nfa_convert_qi_to_resources,
+    nfa_convert_resources,
     nfa_trasfer,
     nfa_deposit_withdraw,
     reward_feigang,
@@ -513,7 +518,8 @@ operation.st_operations = [
     actor_born,
     actor_talent_trigger,
     actor_movement,
-    actor_grown_operation
+    actor_grown_operation,
+    narrate_log_operation
   ];
 
 let transaction = new Serializer(
