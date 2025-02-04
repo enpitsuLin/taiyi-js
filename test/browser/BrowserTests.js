@@ -1,7 +1,7 @@
 import assert from 'assert'
-import {PrivateKey, PublicKey} from 'shared/ecc'
-import {encode, decode} from 'shared/chain/memo'
-import {serverApiRecordEvent} from 'app/utils/ServerApiClient'
+import { PrivateKey, PublicKey } from 'ecc'
+import { encode, decode } from 'shared/chain/memo'
+import { serverApiRecordEvent } from 'app/utils/ServerApiClient'
 
 export const browserTests = {}
 
@@ -13,7 +13,7 @@ export default function runTests() {
         rpt += 'Testing ' + name + '\n'
         try {
             fn()
-        } catch(error) {
+        } catch (error) {
             console.error(error)
             pass = false
             rpt += error.stack + '\n\n'
@@ -46,10 +46,10 @@ export default function runTests() {
     })
     it('decripts memo', () => {
         const dec = decode(private_key, encodedMemo)
-        if(dec !== '#memo') {
+        if (dec !== '#memo') {
             console.error('Decoded memo did not match (memo encryption is unavailable)')
             browserTests.memo_encryption = false
         }
     })
-    if(!pass) return rpt
+    if (!pass) return rpt
 }

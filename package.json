@@ -49,7 +49,10 @@
     "lodash": "^4.16.4",
     "retry": "^0.12.0",
     "secure-random": "^1.1.2",
-    "ws": "^3.3.2"
+    "ws": "^3.3.2",
+    "ecc": "workspace:*",
+    "serializer": "workspace:*",
+    "@taiyi-js/config": "workspace:*"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
@@ -73,5 +76,6 @@
   },
   "contributors": [
     "Hongzhong🀄️ (https://github.com/hongzhongx)"
-  ]
+  ],
+  "packageManager": "pnpm@10.0.0"
 }

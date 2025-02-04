@@ -1,14 +1,16 @@
-var bigi = require('bigi'),
-	bs58 = require('bs58'),
-	ecurve = require('ecurve'),
-	Point = ecurve.Point,
-	secp256k1 = ecurve.getCurveByName('secp256k1'),
-	config = require('../config'),
-	operations = require('./serializer/src/operations'),
-	Signature = require('./ecc/src/signature'),
-	KeyPrivate = require('./ecc/src/key_private'),
-	PublicKey = require('./ecc/src/key_public'),
-  hash = require('./ecc/src/hash');
+import bigi from 'bigi';
+import bs58 from 'bs58';
+import ecurve from 'ecurve';
+import config from '@taiyi-js/config';
+import operations from 'serializer/src/operations';
+import Signature from 'ecc/src/signature';
+import KeyPrivate from 'ecc/src/key_private';
+import PublicKey from 'ecc/src/key_public';
+import hash from 'ecc/src/hash';
+
+
+const Point = ecurve.Point;
+const secp256k1 = ecurve.getCurveByName('secp256k1');
 
 var Auth = {};
 var transaction = operations.transaction;
@@ -98,7 +100,7 @@ Auth.wifToPublic = function (privWif) {
 	return pubWif;
 };
 
-Auth.isPubkey = function(pubkey, address_prefix) {
+Auth.isPubkey = function (pubkey, address_prefix) {
 	return PublicKey.fromString(pubkey, address_prefix) != null
 }
 

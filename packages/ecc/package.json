@@ -2,7 +2,15 @@
   "name": "ecc",
   "version": "1.0.0",
   "description": "Elliptic curve cryptography functions",
-  "keywords": "ECC, Private Key, Public Key, Cryptographic Signature, AES, Encryption, Decryption",
+  "keywords": [
+    "ECC",
+    "Private Key",
+    "Public Key",
+    "Cryptographic Signature",
+    "AES",
+    "Encryption",
+    "Decryption"
+  ],
   "main": "index.js",
   "config": {
     "address_prefix": "TAI"
@@ -17,7 +25,8 @@
     "bytebuffer": "^5.0.0",
     "crypto-js": "^3.1.5",
     "ecurve": "^1.0.2",
-    "secure-random": "^1.1.1"
+    "secure-random": "^1.1.1",
+    "@taiyi-js/config": "workspace:*"
   },
   "author": "zuowangdao",
   "license": "BSD-2-Clause-FreeBSD",

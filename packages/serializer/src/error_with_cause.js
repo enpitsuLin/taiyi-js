@@ -23,4 +23,4 @@ class ErrorWithCause {
     }
 }
     
-module.exports = ErrorWithCause;
+export default ErrorWithCause;

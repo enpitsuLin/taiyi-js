@@ -1,17 +1,13 @@
 import EventEmitter from 'events';
 import Promise from 'bluebird';
-import config from '../config';
+import config from '@taiyi-js/config';
 import methods from './methods';
 import transports from './transports';
 import {
     camelCase
 } from '../utils';
-import {
-    hash
-} from '../auth/ecc';
-import {
-    ops
-} from '../auth/serializer';
+import { hash } from 'ecc';
+import { ops } from 'serializer';
 import {
     jsonRpc
 } from './transports/http';
@@ -141,7 +137,7 @@ class Taiyi extends EventEmitter {
             let id = Math.random();
             let self = this;
             this.log('xmit:' + id + ':', data)
-            cb = function(e, d) {
+            cb = function (e, d) {
                 if (e) {
                     self.log('error', 'rsp:' + id + ':\n\n', e, d)
                 } else {
@@ -161,7 +157,7 @@ class Taiyi extends EventEmitter {
             return
         }
         const id = ++this.seqNo;
-        jsonRpc(this.options.uri, {method, params, id})
+        jsonRpc(this.options.uri, { method, params, id })
             .then(res => { callback(null, res) }, err => { callback(err) });
     }
 
@@ -173,7 +169,7 @@ class Taiyi extends EventEmitter {
         const id = ++this.seqNo;
         let request;
         try {
-            request = signRequest({method, params, id}, account, [key]);
+            request = signRequest({ method, params, id }, account, [key]);
         } catch (error) {
             callback(error);
             return;
@@ -187,9 +183,8 @@ class Taiyi extends EventEmitter {
         this._setLogger(options);
         this._setTransport(options);
         this.transport.setOptions(options);
-        if( options.hasOwnProperty('useTestNet') )
-        {
-          config.set( 'address_prefix', options.useTestNet ? 'TAI' : 'TAI' )
+        if (options.hasOwnProperty('useTestNet')) {
+            config.set('address_prefix', options.useTestNet ? 'TAI' : 'TAI')
         }
     }
 
@@ -323,30 +318,30 @@ class Taiyi extends EventEmitter {
     }
 
     broadcastTransactionSynchronousWith(options, callback) {
-    const trx = options.trx;
-    return this.send(
-        'network_broadcast_api', {
+        const trx = options.trx;
+        return this.send(
+            'network_broadcast_api', {
             method: 'broadcast_transaction_synchronous',
             params: [trx],
         },
-        (err, result) => {
-            if (err) {
-                const {
-                    signed_transaction
-                } = ops;
-                // console.log('-- broadcastTransactionSynchronous -->', JSON.stringify(signed_transaction.toObject(trx), null, 2));
-                // toObject converts objects into serializable types
-                const trObject = signed_transaction.toObject(trx);
-                const buf = signed_transaction.toBuffer(trx);
-                err.digest = hash.sha256(buf).toString('hex');
-                err.transaction_id = buf.toString('hex');
-                err.transaction = JSON.stringify(trObject);
-                callback(err, '');
-            } else {
-                callback('', result);
-            }
-        },
-    );
+            (err, result) => {
+                if (err) {
+                    const {
+                        signed_transaction
+                    } = ops;
+                    // console.log('-- broadcastTransactionSynchronous -->', JSON.stringify(signed_transaction.toObject(trx), null, 2));
+                    // toObject converts objects into serializable types
+                    const trObject = signed_transaction.toObject(trx);
+                    const buf = signed_transaction.toBuffer(trx);
+                    err.digest = hash.sha256(buf).toString('hex');
+                    err.transaction_id = buf.toString('hex');
+                    err.transaction = JSON.stringify(trObject);
+                    callback(err, '');
+                } else {
+                    callback('', result);
+                }
+            },
+        );
 
     }
 }

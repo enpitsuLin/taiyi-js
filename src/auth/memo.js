@@ -2,8 +2,8 @@
 import ByteBuffer from 'bytebuffer'
 import assert from 'assert'
 import base58 from 'bs58'
-import {Aes, PrivateKey, PublicKey} from './ecc'
-import {ops} from './serializer'
+import { Aes, PrivateKey, PublicKey } from 'ecc'
+import { ops } from 'serializer'
 
 const encMemo = ops.encrypted_memo
 
@@ -14,35 +14,35 @@ const encMemo = ops.encrypted_memo
     @return {string} - utf8 decoded string (hash prefix)
 */
 export function decode(private_key, memo) {
-    assert(memo, 'memo is required')
-    assert.equal(typeof memo, 'string', 'memo')
-    if(!/^#/.test(memo)) return memo
-    memo = memo.substring(1)
+  assert(memo, 'memo is required')
+  assert.equal(typeof memo, 'string', 'memo')
+  if (!/^#/.test(memo)) return memo
+  memo = memo.substring(1)
 
-    assert(private_key, 'private_key is required')
-    checkEncryption()
+  assert(private_key, 'private_key is required')
+  checkEncryption()
 
-    private_key = toPrivateObj(private_key)
+  private_key = toPrivateObj(private_key)
 
-    memo = base58.decode(memo)
-    memo = encMemo.fromBuffer(new Buffer(memo, 'binary'))
+  memo = base58.decode(memo)
+  memo = encMemo.fromBuffer(new Buffer(memo, 'binary'))
 
-    const {from, to, nonce, check, encrypted} = memo
-    const pubkey = private_key.toPublicKey().toString()
-    const otherpub = pubkey === from.toString() ? to.toString() : from.toString()
-    memo = Aes.decrypt(private_key, otherpub, nonce, encrypted, check)
+  const { from, to, nonce, check, encrypted } = memo
+  const pubkey = private_key.toPublicKey().toString()
+  const otherpub = pubkey === from.toString() ? to.toString() : from.toString()
+  memo = Aes.decrypt(private_key, otherpub, nonce, encrypted, check)
 
-    // remove varint length prefix
-    const mbuf = ByteBuffer.fromBinary(memo.toString('binary'), ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN)
-    try {
-        mbuf.mark()
-        return '#' + mbuf.readVString()
-    } catch(e) {
-        mbuf.reset()
-        // Sender did not length-prefix the memo
-        memo = new Buffer(mbuf.toString('binary'), 'binary').toString('utf-8')
-        return '#' + memo
-    }
+  // remove varint length prefix
+  const mbuf = ByteBuffer.fromBinary(memo.toString('binary'), ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN)
+  try {
+    mbuf.mark()
+    return '#' + mbuf.readVString()
+  } catch (e) {
+    mbuf.reset()
+    // Sender did not length-prefix the memo
+    memo = new Buffer(mbuf.toString('binary'), 'binary').toString('utf-8')
+    return '#' + memo
+  }
 }
 
 /**
@@ -54,33 +54,33 @@ export function decode(private_key, memo) {
     @return {string} - base64 decoded string (or plain text)
 */
 export function encode(private_key, public_key, memo, testNonce) {
-    assert(memo, 'memo is required')
-    assert.equal(typeof memo, 'string', 'memo')
-    if(!/^#/.test(memo)) return memo
-    memo = memo.substring(1)
+  assert(memo, 'memo is required')
+  assert.equal(typeof memo, 'string', 'memo')
+  if (!/^#/.test(memo)) return memo
+  memo = memo.substring(1)
 
-    assert(private_key, 'private_key is required')
-    assert(public_key, 'public_key is required')
-    checkEncryption()
+  assert(private_key, 'private_key is required')
+  assert(public_key, 'public_key is required')
+  checkEncryption()
 
-    private_key = toPrivateObj(private_key)
-    public_key = toPublicObj(public_key)
+  private_key = toPrivateObj(private_key)
+  public_key = toPublicObj(public_key)
 
-    const mbuf = new ByteBuffer(ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN)
-    mbuf.writeVString(memo)
-    memo = new Buffer(mbuf.copy(0, mbuf.offset).toBinary(), 'binary')
+  const mbuf = new ByteBuffer(ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN)
+  mbuf.writeVString(memo)
+  memo = new Buffer(mbuf.copy(0, mbuf.offset).toBinary(), 'binary')
 
-    const {nonce, message, checksum} = Aes.encrypt(private_key, public_key, memo, testNonce)
-    memo = encMemo.fromObject({
-        from: private_key.toPublicKey(),
-        to: public_key,
-        nonce,
-        check: checksum,
-        encrypted: message
-    })
-    // serialize
-    memo = encMemo.toBuffer(memo)
-    return '#' + base58.encode(new Buffer(memo, 'binary'))
+  const { nonce, message, checksum } = Aes.encrypt(private_key, public_key, memo, testNonce)
+  memo = encMemo.fromObject({
+    from: private_key.toPublicKey(),
+    to: public_key,
+    nonce,
+    check: checksum,
+    encrypted: message
+  })
+  // serialize
+  memo = encMemo.toBuffer(memo)
+  return '#' + base58.encode(new Buffer(memo, 'binary'))
 }
 
 let encodeTest = undefined
@@ -90,7 +90,7 @@ let encodeTest = undefined
   if a memo can't be encrypted and decrypted.
 */
 function checkEncryption() {
-  if(encodeTest === undefined) {
+  if (encodeTest === undefined) {
     let plaintext;
     encodeTest = true // prevent infinate looping
     try {
@@ -98,13 +98,13 @@ function checkEncryption() {
       const pubkey = 'TAI8m5UgaFAAYQRuaNejYdS8FVLVp9Ss3K1qAVk5de6F8s3HnVbvA'
       const cyphertext = encode(wif, pubkey, '#memo爱')
       plaintext = decode(wif, cyphertext)
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     } finally {
       encodeTest = plaintext === '#memo爱'
     }
   }
-  if(encodeTest === false)
+  if (encodeTest === false)
     throw new Error('This environment does not support encryption.')
 }
 

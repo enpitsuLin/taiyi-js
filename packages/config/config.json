@@ -1,8 +1,8 @@
 {
   "transport": "http",
-  "websocket": "ws://127.0.0.1:8090",
+  "websocket": "ws://47.109.49.30:8090",
   "uri": "http://127.0.0.1:8091",
-  "url": "ws://127.0.0.1:8090",
+  "url": "ws://47.109.49.30:8090",
   "dev_uri": "https://api.taiyidev.com",
   "stage_uri": "https://api.taiyistage.com",
   "address_prefix": "TAI",

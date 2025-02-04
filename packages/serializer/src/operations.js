@@ -28,65 +28,69 @@ const operation = static_variant();
 module.exports.operation = operation;
 
 // For module.exports
-const Serializer=function(operation_name, serilization_types_object){
+const Serializer = function (operation_name, serilization_types_object) {
     const s = new SerializerImpl(operation_name, serilization_types_object);
     return module.exports[operation_name] = s;
 }
 
 let signed_transaction = new Serializer(
-    "signed_transaction", {
-    ref_block_num: uint16,
-    ref_block_prefix: uint32,
-    expiration: time_point_sec,
-    operations: array(operation),
-    extensions: set(future_extensions),
-    signatures: array(bytes(65))
-}
+    "signed_transaction",
+    {
+        ref_block_num: uint16,
+        ref_block_prefix: uint32,
+        expiration: time_point_sec,
+        operations: array(operation),
+        extensions: set(future_extensions),
+        signatures: array(bytes(65))
+    }
 );
 
 let signed_block = new Serializer(
-    "signed_block", {
-    previous: bytes(20),
-    timestamp: time_point_sec,
-    siming: string,
-    transaction_merkle_root: bytes(20),
-    extensions: set(static_variant([
-        future_extensions,
-        version,
-        hardfork_version_vote
-    ])),
-    siming_signature: bytes(65),
-    transactions: array(signed_transaction)
-}
+    "signed_block",
+    {
+        previous: bytes(20),
+        timestamp: time_point_sec,
+        siming: string,
+        transaction_merkle_root: bytes(20),
+        extensions: set(static_variant([
+            future_extensions,
+            version,
+            hardfork_version_vote
+        ])),
+        siming_signature: bytes(65),
+        transactions: array(signed_transaction)
+    }
 );
 
 let block_header = new Serializer(
-    "block_header", {
-    previous: bytes(20),
-    timestamp: time_point_sec,
-    siming: string,
-    transaction_merkle_root: bytes(20),
-    extensions: set(static_variant([
-        future_extensions,
-        version,
-        hardfork_version_vote
-    ]))
-}
+    "block_header",
+    {
+        previous: bytes(20),
+        timestamp: time_point_sec,
+        siming: string,
+        transaction_merkle_root: bytes(20),
+        extensions: set(static_variant([
+            future_extensions,
+            version,
+            hardfork_version_vote
+        ]))
+    }
 );
 
 let signed_block_header = new Serializer(
-    "signed_block_header", {
-    previous: bytes(20),
-    timestamp: time_point_sec,
-    siming: string,
-    transaction_merkle_root: bytes(20),
-    extensions: set(static_variant([
-        future_extensions,
-        version,
-        hardfork_version_vote
-    ])),
-    siming_signature: bytes(65)
-}
+    "signed_block_header",
+    {
+        previous: bytes(20),
+        timestamp: time_point_sec,
+        siming: string,
+        transaction_merkle_root: bytes(20),
+        extensions: set(static_variant([
+            future_extensions,
+            version,
+            hardfork_version_vote
+        ])),
+        siming_signature: bytes(65)
+    }
 );
 
 let transfer = new Serializer(
@@ -269,31 +273,31 @@ let claim_reward_balance = new Serializer(
 );
 
 let create_contract = new Serializer(
-    "create_contract", 
+    "create_contract",
     {
     }
 );
 
 let revise_contract = new Serializer(
-    "revise_contract", 
+    "revise_contract",
     {
     }
 );
 
 let call_contract_function = new Serializer(
-    "call_contract_function", 
+    "call_contract_function",
     {
     }
 );
 
 let create_nfa_symbol = new Serializer(
-    "create_nfa_symbol", 
+    "create_nfa_symbol",
     {
     }
 );
 
 let create_nfa = new Serializer(
-    "create_nfa", 
+    "create_nfa",
     {
         creator: string,
         symbol: string
@@ -301,7 +305,7 @@ let create_nfa = new Serializer(
 );
 
 let transfer_nfa = new Serializer(
-    "transfer_nfa", 
+    "transfer_nfa",
     {
         from: string,
         to: string,
@@ -310,7 +314,7 @@ let transfer_nfa = new Serializer(
 );
 
 let approve_nfa_active = new Serializer(
-    "approve_nfa_active", 
+    "approve_nfa_active",
     {
     }
 );
@@ -343,19 +347,19 @@ let siming_set_properties = new Serializer(
 
 let create_zone = new Serializer(
     "create_zone",
-    {        
+    {
     }
 );
-  
+
 let create_actor_talent_rule = new Serializer(
     "create_actor_talent_rule",
-    {        
+    {
     }
 );
 
 let create_actor = new Serializer(
     "create_actor",
-    {        
+    {
         fee: asset,
         creator: string,
         family_name: string,
@@ -365,7 +369,7 @@ let create_actor = new Serializer(
 
 let hardfork = new Serializer(
     "hardfork",
-    {hardfork_id: uint32}
+    { hardfork_id: uint32 }
 );
 
 let return_qi = new Serializer(
@@ -458,69 +462,69 @@ let narrate_log_operation = new Serializer(
 operation.st_operations = [
     account_create,
     account_update,
-  
+
     transfer,
     transfer_to_qi,
     withdraw_qi,
     set_withdraw_qi_route,
     delegate_qi,
-  
+
     siming_update,
     siming_set_properties,
     account_siming_adore,
     account_siming_proxy,
     decline_adoring_rights,
-  
+
     custom,
     custom_json,
-  
+
     request_account_recovery,
     recover_account,
     change_recovery_account,
-        
+
     claim_reward_balance,
-  
+
     // contract
     create_contract,
     revise_contract,
     call_contract_function,
-  
+
     // nfa (non fungible asset)
     create_nfa_symbol,
     create_nfa,
     transfer_nfa,
     approve_nfa_active,
     action_nfa,
-  
+
     // zone
     create_zone,
-  
+
     // actor
     create_actor_talent_rule,
     create_actor,
-  
+
     //**** virtual operations below this point
     hardfork,
     fill_qi_withdraw,
     return_qi_delegation,
     producer_reward,
-  
+
     nfa_convert_resources,
     nfa_trasfer,
     nfa_deposit_withdraw,
     reward_feigang,
     reward_cultivation,
-  
+
     tiandao_year_change,
     tiandao_month_change,
     tiandao_time_change,
-  
+
     actor_born,
     actor_talent_trigger,
     actor_movement,
     actor_grown_operation,
     narrate_log_operation
-  ];
+];
 
 let transaction = new Serializer(
     "transaction", {
@@ -536,9 +540,11 @@ let transaction = new Serializer(
 
 const encrypted_memo = new Serializer(
     "encrypted_memo",
-    {from: public_key,
-    to: public_key,
-    nonce: uint64,
-    check: uint32,
-    encrypted: string_binary}
+    {
+        from: public_key,
+        to: public_key,
+        nonce: uint64,
+        check: uint32,
+        encrypted: string_binary
+    }
 );

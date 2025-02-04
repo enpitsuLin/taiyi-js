@@ -1,10 +1,10 @@
-const api = require("./api");
-const auth = require("./auth");
-const memo = require("./auth/memo");
-const broadcast = require("./broadcast");
-const config = require("./config");
-const formatter = require("./formatter")(api);
-const utils = require("./utils");
+import api from "./api";
+import auth from "./auth";
+import memo from "./auth/memo";
+import broadcast from "./broadcast";
+import config from "@taiyi-js/config";
+import formatter from "./formatter";
+import utils from "./utils";
 
 const taiyi = {
   api,

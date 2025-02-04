@@ -1,12 +1,12 @@
 import assert from 'assert'
-import {encode, decode} from '../src/auth/memo';
-import {PrivateKey} from '../src/auth/ecc';
+import { encode, decode } from '../src/auth/memo';
+import { PrivateKey } from 'ecc';
 
 
 const private_key = PrivateKey.fromSeed("")
 const public_key = private_key.toPublicKey()
 
-describe('taiyi.auth: memo', ()=> {
+describe('taiyi.auth: memo', () => {
     it('plain text', () => {
         const plaintext1 = encode(null/*private_key*/, null/*public_key*/, 'memo')
         assert.equal(plaintext1, 'memo')

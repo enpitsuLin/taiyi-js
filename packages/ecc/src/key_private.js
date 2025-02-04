@@ -1,14 +1,15 @@
-var ecurve = require('ecurve');
-var Point = ecurve.Point;
-var secp256k1 = ecurve.getCurveByName('secp256k1');
-var BigInteger = require('bigi');
-var base58 = require('bs58');
-var assert = require('assert');
-var hash = require('./hash');
-var PublicKey = require('./key_public');
+import ecurve from 'ecurve';
+import BigInteger from 'bigi';
+import base58 from 'bs58';
+import assert from 'assert';
+import hash from './hash';
+import PublicKey from './key_public';
 
-var G = secp256k1.G
-var n = secp256k1.n
+const Point = ecurve.Point;
+const secp256k1 = ecurve.getCurveByName('secp256k1');
+
+const G = secp256k1.G
+const n = secp256k1.n
 
 class PrivateKey {
 
@@ -43,7 +44,7 @@ class PrivateKey {
         try {
             this.fromWif(text)
             return true
-        } catch(e) {
+        } catch (e) {
             return false
         }
     }
@@ -108,12 +109,12 @@ class PrivateKey {
         let KB = public_key.toUncompressed().toBuffer()
         let KBP = Point.fromAffine(
             secp256k1,
-            BigInteger.fromBuffer( KB.slice( 1,33 )), // x
-            BigInteger.fromBuffer( KB.slice( 33,65 )) // y
+            BigInteger.fromBuffer(KB.slice(1, 33)), // x
+            BigInteger.fromBuffer(KB.slice(33, 65)) // y
         )
         let r = this.toBuffer()
         let P = KBP.multiply(BigInteger.fromBuffer(r))
-        let S = P.affineX.toBuffer({size: 32})
+        let S = P.affineX.toBuffer({ size: 32 })
         // SHA512 used in ECIES
         return hash.sha512(S)
     }
@@ -128,9 +129,9 @@ class PrivateKey {
     // }
 
     /** @throws {Error} - overflow of the key could not be derived */
-    child( offset ) {
-        offset = Buffer.concat([ this.toPublicKey().toBuffer(), offset ])
-        offset = hash.sha256( offset )
+    child(offset) {
+        offset = Buffer.concat([this.toPublicKey().toBuffer(), offset])
+        offset = hash.sha256(offset)
         let c = BigInteger.fromBuffer(offset)
 
         if (c.compareTo(n) >= 0)
@@ -138,10 +139,10 @@ class PrivateKey {
 
         let derived = this.d.add(c)//.mod(n)
 
-        if( derived.signum() === 0 )
+        if (derived.signum() === 0)
             throw new Error("Child offset derived to an invalid key, try again")
 
-        return new PrivateKey( derived )
+        return new PrivateKey(derived)
     }
 
     // toByteBuffer() {
@@ -165,7 +166,7 @@ class PrivateKey {
     /* </helper_functions> */
 }
 
-module.exports = PrivateKey;
+export default PrivateKey;
 
 const toPublic = data => data == null ? data :
     data.Q ? data : PublicKey.fromStringOrThrow(data)

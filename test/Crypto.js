@@ -1,19 +1,19 @@
-import config from "../src/config"
-import { Aes, PrivateKey, PublicKey, Signature } from "../src/auth/ecc"
+import config from "@taiyi-js/config"
+import { Aes, PrivateKey, PublicKey, Signature } from "ecc"
 import assert from "assert"
 
-var secureRandom = require('secure-random');
-var hash = require('../src/auth/ecc/src/hash');
-var key = require('../src/auth/ecc/src/key_utils');
+import secureRandom from 'secure-random';
+import hash from 'ecc/src/hash';
+import key from 'ecc/src/key_utils';
 
-describe("taiyi.auth: Crypto", function() {
+describe("taiyi.auth: Crypto", function () {
 
     /*it "Computes public key", ->
         private_key = PrivateKey.fromHex decrypted_key.substring 0, 64
         public_key = private_key.toPublicKey()
         console.log public_key.toHex());*/
-    
-    it("sign", function() {
+
+    it("sign", function () {
         this.timeout(10000);
         var private_key = PrivateKey.fromSeed("1");
         return (() => {
@@ -27,33 +27,33 @@ describe("taiyi.auth: Crypto", function() {
 
 })
 
-describe("taiyi.auth: derives", ()=> {
-    
+describe("taiyi.auth: derives", () => {
+
     let prefix = config.get("address_prefix")
     let one_time_private = PrivateKey.fromHex("8fdfdde486f696fd7c6313325e14d3ff0c34b6e2c390d1944cbfe150f4457168")
     let to_public = PublicKey.fromStringOrThrow(prefix + "7vbxtK1WaZqXsiCHPcjVFBewVj8HFRd5Z5XZDpN6Pvb2dZcMqK")
-    let secret = one_time_private.get_shared_secret( to_public )
-    let child = hash.sha256( secret )
-    
+    let secret = one_time_private.get_shared_secret(to_public)
+    let child = hash.sha256(secret)
+
     // Check everything above with `wdump((child));` from the siming_node:
     assert.equal(child.toString('hex'), "1f296fa48172d9af63ef3fb6da8e369e6cc33c1fb7c164207a3549b39e8ef698")
-    
-    let nonce = hash.sha256( one_time_private.toBuffer() )
+
+    let nonce = hash.sha256(one_time_private.toBuffer())
     assert.equal(nonce.toString('hex'), "462f6c19ece033b5a3dba09f1e1d7935a5302e4d1eac0a84489cdc8339233fbf")
-    
-    it("child from public", ()=> assert.equal(
+
+    it("child from public", () => assert.equal(
         to_public.child(child).toString(),
         "TAI6XA72XARQCain961PCJnXiKYdEMrndNGago2PV5bcUiVyzJ6iL",
         "derive child public key"
     ))
-    
+
     // child = hash.sha256( one_time_private.get_secret( to_public ))
-    it("child from private", ()=> assert.equal(
+    it("child from private", () => assert.equal(
         PrivateKey.fromSeed("alice-brain-key").child(child).toPublicKey().toString(),
         "TAI6XA72XARQCain961PCJnXiKYdEMrndNGago2PV5bcUiVyzJ6iL",
         "derive child from private key"
     ))
-    
+
     // "many keys" works, not really needed
     // it("many keys", function() {
     //     
@@ -86,14 +86,14 @@ describe("taiyi.auth: derives", ()=> {
 
 })
 
-var min_time_elapsed = function(f){
+var min_time_elapsed = function (f) {
     var start_t = Date.now();
     var ret = f();
     var elapsed = Date.now() - start_t;
     assert.equal(
         // repeat operations may take less time
         elapsed >= 250 * 0.8, true,
-        `minimum time requirement was not met, instead only ${elapsed/1000.0} elapsed` 
+        `minimum time requirement was not met, instead only ${elapsed / 1000.0} elapsed`
     );
     return ret;
 };

@@ -1,6 +1,6 @@
-import { PublicKey } from "../../ecc"
+import { PublicKey } from "ecc"
 
-class FastParser {
+export class FastParser {
 
     static fixed_data(b, len, buffer) {
         if (!b) {
@@ -53,5 +53,4 @@ class FastParser {
         }
     }
 }
-
-module.exports = FastParser;
+ 

@@ -1,6 +1,6 @@
-var assert = require('assert');
-var types = require('../src/auth/serializer/src/types');
-var ops = require('../src/auth/serializer/src/operations');
+import assert from 'assert';
+import types from '../packages/serializer/src/types';
+import ops from '../packages/serializer/src/operations';
 
 describe("taiyi.auth: operation test", ()=> {
 

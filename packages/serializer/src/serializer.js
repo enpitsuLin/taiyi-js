@@ -1,19 +1,19 @@
 var ByteBuffer = require('bytebuffer');
-var EC = require('./error_with_cause');
+var EC = require('./error_with_cause').default;
 
 const HEX_DUMP = process.env.npm_config__graphene_serializer_hex_dump
 
-class Serializer {
-    
+export default class Serializer {
+
     constructor(operation_name, types) {
         this.operation_name = operation_name
         this.types = types
-        if(this.types)
+        if (this.types)
             this.keys = Object.keys(this.types)
-        
+
         Serializer.printDebug = true
     }
-    
+
     fromByteBuffer(b) {
         var object = {};
         var field = null;
@@ -34,28 +34,28 @@ class Serializer {
                             //b.reset()
                             var _b = b.copy(o1, o2);
                             console.error(
-                                `${this.operation_name}.${field}\t`, 
+                                `${this.operation_name}.${field}\t`,
                                 _b.toHex()
                             );
                         }
                     }
                     object[field] = type.fromByteBuffer(b);
                 } catch (e) {
-                    if(Serializer.printDebug) {
+                    if (Serializer.printDebug) {
                         console.error(`Error reading ${this.operation_name}.${field} in data:`);
                         b.printDebug();
                     }
                     throw e;
                 }
             }
-        
+
         } catch (error) {
-            EC.throw(this.operation_name+'.'+field, error);
+            EC.throw(this.operation_name + '.' + field, error);
         }
-        
+
         return object;
     }
-    
+
     appendByteBuffer(b, object) {
         var field = null;
         try {
@@ -65,18 +65,18 @@ class Serializer {
                 var type = this.types[field];
                 type.appendByteBuffer(b, object[field]);
             }
-        
+
         } catch (error) {
             try {
-                EC.throw(this.operation_name+'.'+field+" = "+ JSON.stringify(object[field]), error);
+                EC.throw(this.operation_name + '.' + field + " = " + JSON.stringify(object[field]), error);
             } catch (e) { // circular ref
-                EC.throw(this.operation_name+'.'+field+" = "+ object[field], error);
+                EC.throw(this.operation_name + '.' + field + " = " + object[field], error);
             }
         }
         return;
     }
-    
-    fromObject(serialized_object){
+
+    fromObject(serialized_object) {
         var result = {};
         var field = null;
         try {
@@ -90,106 +90,106 @@ class Serializer {
                 var object = type.fromObject(value);
                 result[field] = object;
             }
-            
+
         } catch (error) {
-            EC.throw(this.operation_name+'.'+field, error);
+            EC.throw(this.operation_name + '.' + field, error);
         }
-        
+
         return result;
     }
-    
+
     /**
         @arg {boolean} [debug.use_default = false] - more template friendly
         @arg {boolean} [debug.annotate = false] - add user-friendly information
     */
-    toObject(serialized_object = {}, debug = { use_default: false, annotate: false }){
+    toObject(serialized_object = {}, debug = { use_default: false, annotate: false }) {
         var result = {};
         var field = null;
         try {
-            if( ! this.types )
+            if (!this.types)
                 return result;
-            
+
             var iterable = this.keys;
             for (var i = 0, field; i < iterable.length; i++) {
                 field = iterable[i];
                 var type = this.types[field];
                 var object = type.toObject(((typeof serialized_object !== "undefined" && serialized_object !== null) ? serialized_object[field] : undefined), debug);
                 result[field] = object;
-                if(HEX_DUMP) {
+                if (HEX_DUMP) {
                     var b = new ByteBuffer(ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN);
                     let has_value = typeof serialized_object !== "undefined" && serialized_object !== null
-                    if(has_value) {
+                    if (has_value) {
                         let value = serialized_object[field]
-                        if(value)
+                        if (value)
                             type.appendByteBuffer(b, value);
                     }
                     b = b.copy(0, b.offset);
                     console.error(
-                        this.operation_name+'.'+field,
+                        this.operation_name + '.' + field,
                         b.toHex()
                     );
                 }
             }
         } catch (error) {
-            EC.throw(this.operation_name+'.'+field, error);
+            EC.throw(this.operation_name + '.' + field, error);
         }
-        
+
         return result;
     }
-    
+
     /** Sort by the first element in a operation */
     compare(a, b) {
 
         let first_key = this.keys[0]
         let first_type = this.types[first_key]
-        
+
         let valA = a[first_key]
         let valB = b[first_key]
 
-        if(first_type.compare)
+        if (first_type.compare)
             return first_type.compare(valA, valB)
-        
-        if(typeof valA === "number" && typeof valB === "number")
+
+        if (typeof valA === "number" && typeof valB === "number")
             return valA - valB
-        
+
         let encoding
-        if(Buffer.isBuffer(valA) && Buffer.isBuffer(valB)) {
+        if (Buffer.isBuffer(valA) && Buffer.isBuffer(valB)) {
             // A binary string compare does not work.  If localeCompare is well supported that could replace HEX.  Performanance is very good so comparing HEX works.
             encoding = "hex"
         }
-        
+
         let strA = valA.toString(encoding)
         let strB = valB.toString(encoding)
         return strA > strB ? 1 : strA < strB ? -1 : 0
     }
-    
+
     // <helper_functions>
-    
+
     fromHex(hex) {
         var b = ByteBuffer.fromHex(hex, ByteBuffer.LITTLE_ENDIAN);
         return this.fromByteBuffer(b);
     }
-    
-    fromBuffer(buffer){
+
+    fromBuffer(buffer) {
         var b = ByteBuffer.fromBinary(buffer.toString("binary"), ByteBuffer.LITTLE_ENDIAN);
         return this.fromByteBuffer(b);
     }
-    
+
     toHex(object) {
         // return this.toBuffer(object).toString("hex")
-        var b=this.toByteBuffer(object);
+        var b = this.toByteBuffer(object);
         return b.toHex();
     }
-    
+
     toByteBuffer(object) {
         var b = new ByteBuffer(ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN);
         this.appendByteBuffer(b, object);
         return b.copy(0, b.offset);
     }
-    
-    toBuffer(object){
+
+    toBuffer(object) {
         return new Buffer(this.toByteBuffer(object).toBinary(), 'binary');
     }
 }
 
-module.exports = Serializer
+

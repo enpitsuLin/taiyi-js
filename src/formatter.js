@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import { key_utils } from "./auth/ecc";
+import { key_utils } from "ecc";
 
 module.exports = taiyiAPI => {
   function numberWithCommas(x) {

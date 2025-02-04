@@ -1,6 +1,6 @@
-var Long = (require('bytebuffer')).Long;
+import { Long } from 'bytebuffer'
 
-var v = require('./validation');
+import { is_digits, require_match, required } from './validation';
 var DB_MAX_INSTANCE_ID = Long.fromNumber(((Math.pow(2,48))-1));
 
 class ObjectId {
@@ -11,7 +11,7 @@ class ObjectId {
         this.instance = instance;
         var instance_string = this.instance.toString();
         var object_id = `${this.space}.${this.type}.${instance_string}`;
-        if (!v.is_digits(instance_string)) {
+        if (!is_digits(instance_string)) {
             throw new `Invalid object id ${object_id}`();
         }
     }
@@ -24,9 +24,9 @@ class ObjectId {
         ) {
             return value;
         }
-        var params = v.require_match(
+        var params = require_match(
             /^([0-9]+)\.([0-9]+)\.([0-9]+)$/,
-            v.required(value, "object_id"),
+            required(value, "object_id"),
             "object_id"
         );
         return new ObjectId(
@@ -62,4 +62,4 @@ class ObjectId {
     }
 }
 
-module.exports = ObjectId;
+export default ObjectId;
